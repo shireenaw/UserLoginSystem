@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/css/display_form.css}" />
+</head>
+<body>
+<div style="padding-left: 30px;padding-right:30px;">
+    <h2>User Details</h2>
+    <a th:href="@{/logout}">Logout</a>
+    <div></div>
+    <a th:if="${isCreateUser}" th:href="@{/admin/createUser}">Add
+        new employee
+    </a>
+    <div></div>
+    <a th:href="@{/admin/dashboard}">Back to Dashboard
+    </a>
+    <br/><br/>
+    <table>
+        <tbody>
+        <tr>
+            <td><strong>User Id:</strong></td>
+            <td><span th:text="${users.userId}"></span></td>
+        </tr>
+        <tr>
+            <td><strong>First Name:</strong></td>
+            <td><span th:text="${users.firstName}"></span></td>
+        </tr>
+        <tr>
+            <td><strong>Last Name:</strong></td>
+            <td><span th:text="${users.lastName}"></span></td>
+        </tr>
+        <tr>
+            <td><strong>Mobile Number:</strong></td>
+            <td><span th:text="${users.mobileNum}"></span></td>
+        </tr>
+        <tr>
+            <td><strong>Email:</strong></td>
+            <td><span th:text="${users.email}"></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
