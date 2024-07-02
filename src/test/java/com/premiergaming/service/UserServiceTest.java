@@ -1,8 +1,8 @@
 package com.premiergaming.service;
 
-import com.premiergaming.model.Users;
+import com.premiergaming.model.dto.UsersDTO;
+import com.premiergaming.model.entity.Users;
 import com.premiergaming.repository.UsersRepository;
-import com.premiergaming.service.UsersService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,10 +14,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
@@ -27,33 +28,22 @@ public class UserServiceTest {
     private UsersRepository usersRepository;
     @InjectMocks
     private UsersService userService;
+    private UsersDTO userDTOOne;
+    private UsersDTO userDTOTwo;
+    private UsersDTO userDTOThree;
     private Users userOne;
     private Users userTwo;
     private Users userThree;
 
     @BeforeEach
     void setUp() {
-        userOne = new Users();
-        userOne.setUserId(1);
-        userOne.setFirstName("Shireen");
-        userOne.setLastName("Test");
-        userOne.setMobileNum("77077889");
-        userOne.setEmail("shireen.test@gmail.com");
-        userOne.setRole("USER");
-        userTwo = new Users();
-        userTwo.setUserId(2);
-        userTwo.setFirstName("Jennie");
-        userTwo.setLastName("Mifsud");
-        userTwo.setMobileNum("99078864");
-        userTwo.setEmail("jennie.mifsud@gmail.com");
-        userTwo.setRole("USER");
-        userThree = new Users();
-        userThree.setUserId(3);
-        userThree.setFirstName("Sarah");
-        userThree.setLastName("Calleja");
-        userThree.setMobileNum("77089909");
-        userThree.setEmail("sarah.calleja@gmail.com");
-        userThree.setRole("USER");
+        userOne = new Users(1,"Shireen","Test","77077889","shireen.test@gmail.com","USER", "shireen1234");
+        userTwo = new Users(2,"Jennie","Mifsud","99078864","jennie.mifsud@gmail.com","USER","jennie1234");
+        userThree = new Users(3,"Sarah","Calleja","77089909","sarah.calleja@gmail.com","USER","sarah1234");
+        userDTOOne = new UsersDTO(1,"Shireen","Test","77077889","shireen.test@gmail.com","USER", "shireen1234");
+//        userDTOTwo = new UsersDTO(2,"Jennie","Mifsud","99078864","jennie.mifsud@gmail.com","USER","jennie1234");
+//        userDTOThree = new UsersDTO(3,"Sarah","Calleja","77089909","sarah.calleja@gmail.com","USER","sarah1234");
+
     }
 
     @Test
@@ -66,7 +56,7 @@ public class UserServiceTest {
 
         Mockito.when(usersRepository.findAll()).thenReturn(list);
         //test
-        List<Users> usersList = userService.getAll();
+        List<UsersDTO> usersList = userService.getAll();
 
         assertEquals(3, usersList.size());
     }
@@ -74,17 +64,19 @@ public class UserServiceTest {
     @Test
     public void createTest()
     {
-        userService.create(userOne);
-        Mockito.verify(usersRepository, Mockito.times(1)).save(userOne);
+        Mockito.when(usersRepository.save(any(Users.class))).then(returnsFirstArg());
+        UsersDTO savedUser = userService.create(userDTOOne);
+        assertThat(savedUser).isNotNull();
     }
 
     @Test
     public void getByUserIdTest()
     {
-        userService.create(userOne);
+        Mockito.when(usersRepository.save(any(Users.class))).then(returnsFirstArg());
+        userService.create(userDTOOne);
         Mockito.when(usersRepository.findByUserId(1)).thenReturn(userOne);
 
-        Users user = userService.getByUserId(1);
+        UsersDTO user = userService.getByUserId(1);
 
         assertEquals("Shireen", user.getFirstName());
         assertEquals("Test", user.getLastName());
@@ -93,52 +85,37 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findUserByMobileNumTest()
+    public void findUserByEmailTest()
     {
-        userService.create(userOne);
+        Mockito.when(usersRepository.save(any(Users.class))).then(returnsFirstArg());
+        UsersDTO savedUser = userService.create(userDTOOne);
         Mockito.when(usersRepository.getUserByEmail("shireen.test@gmail.com")).thenReturn(userOne);
-
-        Users user = userService.getUserByEmail("shireen.test@gmail.com");
+        UsersDTO user = userService.getUserByEmail(savedUser.getEmail());
 
         assertEquals("Shireen", user.getFirstName());
         assertEquals("Test", user.getLastName());
         assertEquals("shireen.test@gmail.com",user.getEmail());
         assertEquals("77077889", user.getMobileNum());
     }
-
-
-//    @Test
-//    public void updateTest()
-//    {
-//        userService.create(userOne);
-//        List<Users> usersList = new ArrayList<>();
-//        usersList.add(userOne);
-//
-//        String initialLastName = userOne.getLastName();
-//
-//        userOne.setLastName("Loh");
-//        userService.update(userOne);
-//
-//        Mockito.verify(usersRepository, Mockito.times(1)).save(userOne);
-//        Mockito.when(usersRepository.findByUserId(userOne.getUserId())).thenReturn(new Users());
-//
-//        assertNotEquals(initialLastName,userOne.getLastName());
-//    }
 
     @Test
     public void deleteUserTest()
     {
-        userService.create(userOne);
-        Mockito.verify(usersRepository, Mockito.times(1)).save(userOne);
-        Mockito.when(usersRepository.findByUserId(1))
-                .thenReturn(userOne).thenReturn(null);
+        Mockito.when(usersRepository.save(any(Users.class))).then(returnsFirstArg());
+        userService.create(userDTOOne);
+        Mockito.when(usersRepository.findByUserId(1)).thenReturn(userOne).thenReturn(userOne);
 
         // when
         userService.deleteUserByUserId(userOne.getUserId());
-
         // then
-        Mockito.verify(usersRepository, Mockito.times(1))
-                .delete(userOne);
+        Mockito.verify(usersRepository, Mockito.times(1)).delete(userOne);
+
+        Mockito.when(usersRepository.findByUserId(1)).thenReturn(null);
+
+        UsersDTO user = userService.getByUserId(1);
+
+        assertThat(user).isNull();
+
 
     }
 

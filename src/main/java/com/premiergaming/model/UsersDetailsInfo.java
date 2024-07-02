@@ -1,6 +1,6 @@
-package com.premiergaming.configuration;
+package com.premiergaming.model;
 
-import com.premiergaming.model.Users;
+import com.premiergaming.model.entity.Users;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

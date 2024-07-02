@@ -1,4 +1,4 @@
-This application is created using Spring Security, Springboot framework, Java 17 and JPA entity data model.
+This application is created using Spring Security, Springboot framework, Spring Web, Java 17, Thymeleaf and JPA entity data model.
 
 This application will seed the in memory database. This application contains both source code
 and test cases for the service layer. In order to run the system,
@@ -34,27 +34,24 @@ Configuration
         - Allowing unauthenticated access to the h2 console.
         - Allowing unauthenticated GET-access to /login, /admin/* and /users/*.
         - Set custom login page and redirect the page based on roles
-        - Handle unathorized page
+        - Handle unauthorized page
 2. CustomAuthenticationSuccessHandler
     - This class is used to redirect to different page based on roles after login successfully
 
 
 There are 3 API Controllers. APIs
-1. FilmController - This controller contains REST APIs regarding film inventory
-    - user can find APIs to create new film, update film information or find film by name or the film id
-    - the APIs are mainly being used for admin to maintain the Film Inventory.
-2. UsersController - This controller contains REST APIs regarding user data
-    - user can find APIs to create new user, update user, delete user or find user by mobile number or name.
-    - this APIs are mainly being used for admin to register user
-3. UserFilmController - This controller contains REST APIs regarding userfilm (rental)
-    - user can use the APIs to create new user film , update , find and delete user film
-    - getTotalRent() api is for the user to calculate the total rental of a list of films
-    - checkLateCharges() api is for the user to calculate the surcharge by passing the list of film ids
-    - returnFilms() api will update the data if there is late charges and the status of the user film (Rent/Returned/Late Returned)
+1. AdminController - This controller contains APIs regarding admin.
+    - user can find APIs to create new user, delete user or find user by email or the user id
+    - the APIs are mainly being used for admin to maintain the User list.
+2. UsersController - This controller contains APIs regarding user.
+    - user can find APIs to view user details.
+3. HomeController - This controller contains APIs for login page and user denied page.
 
 Model
-1. There are three entity model
+1. There are one entity, one dto and one mapper
     - Users (users entity table)
+    - UsersDTO (user object)
+    - UsersMapper (Mapping from UsersDTO to Users and vice versa)
 
 Service and Repository
 1. UserService and IUserService

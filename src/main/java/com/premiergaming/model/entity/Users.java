@@ -1,9 +1,7 @@
-package com.premiergaming.model;
+package com.premiergaming.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Arrays;
@@ -11,9 +9,10 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
-@Data
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Users {
 
     @Id
@@ -31,6 +30,5 @@ public class Users {
     private String role;
     @Column(name="password")
     private String password;
-
 
 }

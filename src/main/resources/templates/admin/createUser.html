@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-md-8 mx-auto">
                 <h2>User Registration</h2>
-                <form th:action="@{/admin/createUser/success}" th:object="${users}" method="post">
+                <form th:action="@{/admin/createUser/success}" th:object="${usersDTO}" method="post">
                     <div th:if="${error != null}">
                         <p class="text-danger" th:text="${error.errorMessage}"></p>
                     </div>
