@@ -32,7 +32,6 @@ Configuration
         - CSRF is disabled for easier access on this learning project.
         - Default HTTP Basic as authentication method.
         - Allowing unauthenticated access to the h2 console.
-        - Allowing unauthenticated GET-access to /login, /admin/* and /users/*.
         - Set custom login page and redirect the page based on roles
         - Handle unauthorized page
 2. CustomAuthenticationSuccessHandler
